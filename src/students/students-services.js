@@ -32,4 +32,4 @@ const StudentsService = {
     }
 };
 
-module.exports = NotesService;
+module.exports = StudentsService;
