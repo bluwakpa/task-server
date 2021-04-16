@@ -1,35 +1,34 @@
 const express = require('express');
 const xss = require('xss');
-const NotesService = require('./notes-service');
-const notesRouter = express.Router();
+const StudentsService = require('./students-service');
+const StudentsRouter = express.Router();
 const jsonParser = express.json();
 
-//serialize note in case of xss attack
-const serializeNote = note => ({
-    id: note.id,
-    name: xss(note.name),
-    content: xss(note.content),
-    modified: note.modified,
-    folderId: note.folderId
+//serialize student in case of xss attack
+const serializeNote = student => ({
+    id: student.id,
+    name: xss(student.name),
+    content: xss(student.content),
+    modified: student.modified,
 });
 
-//get all notes and add new note
-notesRouter
+//get all students and add new student
+studentsRouter
  .route('/')
  .get((req, res, next) => {
      const knexInstance = req.app.get('db');
-     NotesService.getAllNotes(knexInstance)
-      .then(notes => { 
-          res.json(notes.map(serializeNote)) })
+     StudentsService.getAllNotes(knexInstance)
+      .then(students => { 
+          res.json(students.map(serializeNote)) })
       .catch(next);
  })
  .post(jsonParser, (req, res, next) => {
      const knexInstance = req.app.get('db');
-     const { name, content, folderId, modified } = req.body;
-     const newNote = { name, content, folderId, modified };
+     const { name, content, modified } = req.body;
+     const newNote = { name, content, modified };
 
      //each value in new note is required, verify that they were sent
-     for(const [key, value] of Object.entries(newNote)){
+     for(const [key, value] of Object.entries(newStudent)){
          if(value == null){
              return res.status(400).json({
                  error: { message: `Missing '${key}' in request body'`}
@@ -37,65 +36,65 @@ notesRouter
          }
      }
 
-     NotesService.insertNote(knexInstance, newNote)
-      .then(note => {
+     StudentsService.insertNote(knexInstance, newStudent)
+      .then(student => {
           res
             .status(201)
-            .location(req.originalUrl + `/${note.id}`)
-            .json(serializeNote(note))
+            .location(req.originalUrl + `/${student.id}`)
+            .json(serializeNote(student))
       })
       .catch(next);
  });
 
- //get, update, or delete specific note
+ //get, update, or delete specific student
  notesRouter
   .route('/:id')
   .all((req, res, next) => {
       const knexInstance = req.app.get('db');
       const noteId = req.params.id;
 
-      NotesService.getNoteById(knexInstance, noteId)
-       .then(note => {
-           if(!note){ 
+      StudentsService.getNoteById(knexInstance, studentId)
+       .then(student => {
+           if(!student){ 
                return res.status(404).json({
-                   error: { message: `Note doesn't exist`}
+                   error: { message: `Student doesn't exist`}
                });
            }
-           res.note = note;
+           res.student = student;
            next();
        })
        .catch(next);
   })
   .get((req, res, next) => {
-    res.json(serializeNote(res.note));
+    res.json(serializeNote(res.student));
   })
   .delete((req, res, next) => {
     const knexInstance = req.app.get('db');
-    const deleteNoteId = res.note.id;
+    const deleteStudentId = res.student.id;
 
-    NotesService.deleteNote(knexInstance, deleteNoteId)
+    NotesService.deleteNote(knexInstance, deleteStudentId)
        .then(() => res.status(204).end())
        .catch(next);
   })
   .patch(jsonParser, (req, res, next) => {
     const knexInstance = req.app.get('db');
-    const updateNoteId = res.note.id;
+    const updateStudentId = res.student.id;
     const { name, content, folderId, modified } = req.body;
-    const updatedNote = { name, content, folderId, modified };
+    const updatedStudent = { name, content, folderId, modified };
 
     //check that at least one field is getting updated in order to patch
-    const numberOfValues = Object.values(updatedNote).filter(Boolean).length 
+    const numberOfValues = Object.values(updatedStudent).filter(Boolean).length 
     if(numberOfValues === 0){
         return res.status(400).json({
             error: { 
-                message: `Request body must contain either 'note_name', 'content', or 'folder_id'`
+                message: `Request body must contain either 'student_name', 'content', or 'student_id'`
             }
         });
     }
 
-    updatedNote.date_modified = new Date();
+    updatedStudent.date_modified = new Date();
 
-    NotesService.updateNote(knexInstance, updateNoteId, updatedNote)
+    StudentsService.updateNote(knexInstance, updateStudentId, updatedStudent)
      .then(() => res.status(204).end())
      .catch(next);
   });

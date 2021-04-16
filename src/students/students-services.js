@@ -1,34 +1,34 @@
-//manage database interactions for notes
-const NotesService = {
+//manage database interactions for students
+const StudentsService = {
     getAllNotes(knex){
         return knex
          .select('*')
-         .from('notes');
+         .from('students');
     },
-    insertNote(knex, newNote){
+    insertNote(knex, newStudent){
         return knex
-         .insert(newNote)
-         .into('notes')
+         .insert(newStudent)
+         .into('students')
          .returning('*')
          .then(rows => { return rows[0] });
     },
-    getNoteById(knex, noteId){
-        console.log("noteId", noteId);
+    getNoteById(knex, studentId){
+        console.log("studentId", studentId);
         return knex
          .select('*')
-         .from('notes')
-         .where('id', noteId)
-         .first(); //get note itself
+         .from('students')
+         .where('id', studentId)
+         .first(); //get student itself
     },
-    deleteNote(knex, noteId){
-        return knex('notes')
-         .where('id', noteId)
+    deleteNote(knex, studentId){
+        return knex('students')
+         .where('id', studentId)
          .delete();
     },
-    updateNote(knex, noteId, updatedNote){
-        return knex('notes')
-         .where('id', noteId)
-         .update(updatedNote);
+    updateNote(knex, studentId, updatedStudent){
+        return knex('students')
+         .where('id', studentId)
+         .update(updatedStudent);
     }
 };
 

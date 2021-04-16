@@ -1,4 +1,4 @@
-INSERT INTO notes (id, name, modified, folderId, content)
+INSERT INTO students (id, name, modified, folderId, content)
     VALUES
     ("cbc787a0-ffaf-11e8-8eb2-f2801f1b9fd1", "Dogs", "2019-01-03T00:00:00.000Z", "b0715efe-ffaf-11e8-8eb2-f2801f1b9fd1", faker.lorem.paragraphs()),
     ("d26e0034-ffaf-11e8-8eb2-f2801f1b9fd1", "Cats", "2018-08-15T23:00:00.000Z", "b07161a6-ffaf-11e8-8eb2-f2801f1b9fd1", faker.lorem.paragraphs()),

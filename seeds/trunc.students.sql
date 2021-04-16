@@ -1,1 +1,1 @@
-TRUNCATE notes;
+TRUNCATE students;
