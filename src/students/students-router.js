@@ -67,7 +67,7 @@ studentsRouter
        .catch(next);
   })
   .get((req, res, next) => {
-    res.json(serializeNote(res.student));
+    res.json(serializeStudent(res.student));
   })
   .delete((req, res, next) => {
     const knexInstance = req.app.get('db');

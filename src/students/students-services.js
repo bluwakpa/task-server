@@ -1,18 +1,18 @@
 //manage database interactions for students
 const StudentsService = {
-    getAllNotes(knex){
+    getAllStudents(knex){
         return knex
          .select('*')
          .from('students');
     },
-    insertNote(knex, newStudent){
+    insertStudent(knex, newStudent){
         return knex
          .insert(newStudent)
          .into('students')
          .returning('*')
          .then(rows => { return rows[0] });
     },
-    getNoteById(knex, studentId){
+    getStudentById(knex, studentId){
         console.log("studentId", studentId);
         return knex
          .select('*')
@@ -20,12 +20,12 @@ const StudentsService = {
          .where('id', studentId)
          .first(); //get student itself
     },
-    deleteNote(knex, studentId){
+    deleteStudent(knex, studentId){
         return knex('students')
          .where('id', studentId)
          .delete();
     },
-    updateNote(knex, studentId, updatedStudent){
+    updateStudent(knex, studentId, updatedStudent){
         return knex('students')
          .where('id', studentId)
          .update(updatedStudent);
