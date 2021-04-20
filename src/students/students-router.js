@@ -1,6 +1,6 @@
 const express = require('express');
 const xss = require('xss');
-const StudentsService = require('./students-service');
+const StudentsServices = require('./students-services');
 const StudentsRouter = express.Router();
 const jsonParser = express.json();
 
@@ -10,23 +10,23 @@ const serializeStudent = student => ({
     last_name: xss(student.last_name),
     id: student.id,
     modified: student.modified,
-    attendance: {"Today": false, "Yesterday": true}
+    attendance: student.attendance
 });
 
 //get all students and add new student
-studentsRouter
+StudentsRouter
  .route('/')
  .get((req, res, next) => {
      const knexInstance = req.app.get('db');
-     StudentsService.getAllStudents(knexInstance)
+     StudentsServices.getAllStudents(knexInstance)
       .then(students => { 
           res.json(students.map(serializeStudent)) })
       .catch(next);
  })
  .post(jsonParser, (req, res, next) => {
      const knexInstance = req.app.get('db');
-     const { first_name, last_name, id, modified, attendance } = req.body;
-     const newStudent = { first_name, last_name, id, modified, attendance };
+     const { first_name, last_name, modified, attendance } = req.body;
+     const newStudent = { first_name, last_name, modified, attendance };
 
      //each value in new student is required, verify that they were sent
      for(const [key, value] of Object.entries(newStudent)){
@@ -37,7 +37,7 @@ studentsRouter
          }
      }
 
-     StudentsService.insertStudent(knexInstance, newStudent)
+     StudentsServices.insertStudent(knexInstance, newStudent)
       .then(student => {
           res
             .status(201)
@@ -48,13 +48,13 @@ studentsRouter
  });
 
  //get, update, or delete specific student
- studentsRouter
+ StudentsRouter
   .route('/:id')
   .all((req, res, next) => {
       const knexInstance = req.app.get('db');
-      const studentId = req.params.id;
+      const id = req.params.id;
 
-      StudentsService.getStudentById(knexInstance, studentId)
+      StudentsServices.getStudentById(knexInstance, id)
        .then(student => {
            if(!student){ 
                return res.status(404).json({
@@ -73,7 +73,7 @@ studentsRouter
     const knexInstance = req.app.get('db');
     const deleteStudentId = res.student.id;
 
-    StudentsService.deleteStudent(knexInstance, deleteStudentId)
+    StudentsServices.deleteStudent(knexInstance, deleteStudentId)
        .then(() => res.status(204).end())
        .catch(next);
   })
@@ -95,9 +95,9 @@ studentsRouter
 
     updatedStudent.date_modified = new Date();
 
-    StudentsService.updateStudent(knexInstance, updateStudentId, updatedStudent)
+    StudentsServices.updateStudent(knexInstance, updateStudentId, updatedStudent)
      .then(() => res.status(204).end())
      .catch(next);
   });
 
- module.exports = studentsRouter;
+ module.exports = StudentsRouter;

@@ -1,5 +1,5 @@
 //manage database interactions for students
-const StudentsService = {
+const StudentsServices = {
     getAllStudents(knex){
         return knex
          .select('*')
@@ -12,24 +12,24 @@ const StudentsService = {
          .returning('*')
          .then(rows => { return rows[0] });
     },
-    getStudentById(knex, studentId){
-        console.log("studentId", studentId);
+    getStudentById(knex, id){
+        console.log("id", id);
         return knex
          .select('*')
          .from('students')
-         .where('id', studentId)
+         .where('id', id)
          .first(); //get student itself
     },
-    deleteStudent(knex, studentId){
+    deleteStudent(knex, id){
         return knex('students')
-         .where('id', studentId)
+         .where('id', id)
          .delete();
     },
-    updateStudent(knex, studentId, updatedStudent){
+    updateStudent(knex, id, updatedStudent){
         return knex('students')
-         .where('id', studentId)
+         .where('id', id)
          .update(updatedStudent);
     }
 };
 
-module.exports = StudentsService;
+module.exports = StudentsServices;
