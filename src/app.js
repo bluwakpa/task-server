@@ -6,16 +6,19 @@ const helmet = require('helmet')
 const knex = require('knex')
 const { NODE_ENV } = require('./config')
 const studentsRouter = require('./students/students-router')
-
 const app = express()
 
 const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
-  : 'common';
+    ? 'tiny'
+    : 'common';
 
 app.use(morgan(morganOption))
 app.use(helmet())
-app.use(cors())
+app.use(
+    cors({
+        origin: NODE_ENV
+    })
+)
 
 app.get('/', (req, res) => {
     res.send('Hello, world!')
