@@ -15,7 +15,9 @@ const morganOption = (NODE_ENV === 'production')
 
 app.use(morgan(morganOption))
 app.use(helmet())
-app.use(cors({origin: 'http://localhost:3000/'}))
+app.use(cors({
+    origin: 'http://localhost:3000/'
+}))
 
 app.get('/', (req, res) => {
     res.send('Hello, world!')
