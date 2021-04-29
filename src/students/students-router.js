@@ -52,7 +52,7 @@ StudentsRouter
   .route('/:id')
   .all((req, res, next) => {
       const knexInstance = req.app.get('db');
-      const id = req.params.id;
+      const id = Number(req.params.id);
 
       StudentsServices.getStudentById(knexInstance, id)
        .then(student => {
