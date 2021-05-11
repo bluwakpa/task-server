@@ -5,7 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const knex = require('knex')
 const { NODE_ENV } = require('./config')
-const studentsRouter = require('./students/students-router')
+const tasksRouter = require('./tasks/tasks-router')
 
 const app = express()
 
@@ -24,12 +24,12 @@ app.get('/', (req, res) => {
 })
 
 // endpoint url to router connection
-app.use('/api/students', studentsRouter)
+app.use('/api/tasks', tasksRouter)
 
-// app.get('/students', (req, res, next) => {
+// app.get('/tasks', (req, res, next) => {
 //     const knexInstance = req.app.get('db')
 //     ArticlesService.getAllArticles(knexInstance)
-//     .then(students => {
+//     .then(tasks => {
 //         res.json(articles)
 //       })
 //       .catch(next)
