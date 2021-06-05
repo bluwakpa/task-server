@@ -13,7 +13,6 @@ const TasksServices = {
          .then(rows => { return rows[0] });
     },
     getTaskById(knex, id){
-        console.log("id", id);
         return knex
          .select('*')
          .from('tasks')
